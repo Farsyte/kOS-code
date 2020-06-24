@@ -4,6 +4,7 @@
     clearscreen.
     set terminal:width to w.
     set terminal:height to h.
-    core:doAction("open terminal", true).
+    if career():candoactions
+      core:doAction("open terminal", true).
   }).
 export(n, _).}
