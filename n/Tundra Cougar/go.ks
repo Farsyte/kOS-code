@@ -47,7 +47,10 @@
   wait 5.
   ev("on orbit").
 
-  warpto(time:seconds + 2 * orbit:period).
+  // operator will toggle the gear when it is time to come home.
+  gear off.
+  wait until gear.
+
   ev("descent").
 
   lock steering to retrograde.
