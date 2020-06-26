@@ -136,7 +136,7 @@
 
   ).
 
-  set mission:display to {
+  function display {
     print "VESSEL:                                 " at (0, 0).
     print "RUNMODE:                                " at (0, 1).
     print "ALTITUDE:                               " at (0, 2).
@@ -171,21 +171,8 @@
 
   function go {
     term(96,80).
-    print " ".
-    print " ".
-    print " ".
-    print " ".
-    print " ".
-    print " ".
-    print " ".
-    print " ".
-    print " ".
-    print " ".
-    local i is 1. until i >= seq:length {
-      print " ". set i to i + 2.
-    }
-    print " ".
 
+    set mission:display to display@.
     mission:steps(seq).
   }
 
