@@ -7,7 +7,8 @@
   // can we put this at the top?
   export(n, lex(
     "launch", launch@,
-    "circ", circ@)).
+    "circ", circ@,
+    "node", node@)).
 
   local ev is import("boot"):ev.
 
@@ -59,5 +60,59 @@
       SET Ct TO 0.
     }
     return list(dVm,Cs,Ct).
+  }
+
+  local bv is v(0,0,0).
+  local v0 is v(0,0,0).
+  local dv is 0.
+  local dt is 0.
+
+  // pof:node() -- subroutine for mnv node processing
+  // returns remaining delta-v, or -1 if really done.
+  // uses bv, v0, dv, dt in the parent scope for state.
+  function node {
+    local mnv is NEXTNODE.
+    set bv to mnv:BURNVECTOR.
+    set dv to bv:mag.
+    set dt to mt(dv).
+    if v0:mag = 0 set v0 to bv.
+    local wt is mnv:ETA - mt(v0:MAG)/2.
+    if wt > 0 {
+      LOCAL t0 IS TIME:SECONDS + wt.
+      LOCK THROTTLE TO 0.
+      LOCK STEERING TO bv.
+      if wt > 20 WARPTO(t0 - 10).
+      if time:seconds < t0 return dv.
+    }
+    if warp > 0 set warp to 0.
+    if (VDOT(bv, v0) <= 0) {
+      lock throttle to 0.
+      unlock steering.
+      remove mnv.
+      set dv to 0. set dt to 0.
+      set bv to v(0,0,0).
+      set v0 to v(0,0,0).
+      return -1.
+    }
+    // TODO improve the throttle lock!
+    // TODO reduce throttle if not pointed right!
+    LOCK STEERING TO bv.
+    LOCK THROTTLE TO MIN(dt, 1).
+    return dv.
+  }
+
+  local Cs is facing.
+  local Ct is 0.
+
+  // pof:grav(Ho) -- subroutine to follow a gravity turn
+  // returns true if apoapsis exceeds Ho + 1000.
+  function grav {
+    parameter Ho.
+    local pct_alt is alt:radar / H0.
+    local target_pitch is -115.23935 * pct_alt^0.4095114 + 88.963.
+    local pitch is max(0, target_pitch).
+    ss(). set Cs to heading(Dir, pitch, 0). set Ct to 1.
+    lock steering to Cs. lock throttle to Ct.
+    return ship:apoapsis > Ho + 1000.
   }
 }

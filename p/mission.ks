@@ -1,6 +1,5 @@
 { parameter n.
   local json is import("json").
-  print "loading mission.ks v1.1".
   local _ is lex(
 
     // mission:steps(l) -- run a mission using the given list of
