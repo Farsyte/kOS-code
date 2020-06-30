@@ -31,7 +31,14 @@
     // display update called before each step starts.
     // mission can replace the delegate with their own
     // display manager.
-    "display", { print "RUNMODE: " + _:n at (0,40). },
+    "display", {
+        local i is 0. until i >= _:s:length {
+          print "                                   " at (0,i/2).
+          print "- [ ] " + _:s[i] at (0,i/2).
+          set i to i + 2.
+        }
+        print "->[*]" at (0,_:i/2).
+    },
 
     "s", list(), // access to current step list
     "m", lex(), // access to name index into step list
