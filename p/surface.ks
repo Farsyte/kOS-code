@@ -1,9 +1,9 @@
 { parameter n. export(n, lex("normal", normal@)).
-  local nv is north:vector.
-  local uv is up:vector.
-  local ev is vcrs(nv, uv).
+  local vn is north:vector.
+  local vu is up:vector.
+  local ve is vcrs(vn, vu).
   function ap { parameter nc, ec.
-    local xv is body:geopositionof(ship:position + nc*nv + ec*ev).
+    local xv is body:geopositionof(ship:position + nc*vn + ec*ve).
     return xv:altitudeposition(xv:terrainheight).
   }
   function normal {
