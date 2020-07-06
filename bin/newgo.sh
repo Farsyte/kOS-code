@@ -6,13 +6,9 @@ series="$*"
 dir="n/$series/A"
 mkdir -p "$dir"
 cat > "$dir/go.ks" << EOF
-{ parameter n.
-  local _ is lex(
-"go", {
+{ parameter n. export(n, lex("go",go@)).
+  function go {
 
-   // add code for $series here.
-
-}).
-  export(n, _).
+  }
 }
 EOF
